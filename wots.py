@@ -23,7 +23,7 @@ def random_wkey(w=8, verbose=0):      #create random W-OTS keypair
 
     priv = []
     pub = []
-    print "=============== Generacion de par Privado, Publico ================"
+    print "=============== Public - Private key pair generation ================"
     raw_input("Press enter to continue....")    
     
     for x in range(256/w):
@@ -36,7 +36,7 @@ def random_wkey(w=8, verbose=0):      #create random W-OTS keypair
         pub.append(a)
         print "\n\nPublic key value " , x , " : ", a 
     
-    raw_input("Siguiente paso? ")              
+    raw_input("Press enter to continue....")    
     return priv, pub 
 
 def sign_wkey(priv, message):      
