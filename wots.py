@@ -6,7 +6,7 @@ import time
 from os import urandom
 
 import sys
-message="Hola amigos del MUSTIC!"
+message="AAAAAAAAAABBBBBBBBBCCCCCCCCC"
 
 def random_key(x, n=32): 
     key = hexlify(urandom(n)) #returns a 256 bit hex encoded (64 bytes) random number
@@ -40,28 +40,38 @@ def random_wkey(w=8, verbose=0):      #create random W-OTS keypair
     return priv, pub 
 
 def sign_wkey(priv, message):      
-
+    print "\n=============== Signature (privatekey, message)==============="
+    raw_input("Press enter to continue....")  
     signature = []
     bin_msg = unhexlify(sha256(message))
+    print "\n\t",bin_msg
 
     for y in range(len(priv)):
-        s = priv[y]    
-        for x in range(256-ord(bin_msg[y:y+1])):
+        s = priv[y]   
+        messageHashPieceValue = ord(bin_msg[y:y+1])
+        print "\n\t\t 256 -",messageHashPieceValue,"=",256 - messageHashPieceValue,"Hashing (SHA-256) iterations over PRIVATE KEY piece",y 
+        for x in range(256 - messageHashPieceValue):
+            print ">",
             s = sha256(s)
         signature.append(s)
     return signature
 
 def verify_wkey(signature, message, pub):
+    print "\n=============== Verify (signature, message, publickey) ==============="
+    raw_input("Press enter to continue....")  
 
     verify = []
     bin_msg = unhexlify(sha256(message))
+    print "\n\t",bin_msg
     
     for x in range(len(signature)):
         a = signature[x]
-                                                    
-        for z in range(ord(bin_msg[x:x+1])):
-                a=sha256(a)
         
+        messageHashPieceValue = ord(bin_msg[x:x+1])
+        print "\n\t\t",messageHashPieceValue,"Hashing (SHA-256) iterations over SIGNATURE piece",x                                             
+        for z in range(messageHashPieceValue):
+                a=sha256(a)
+                print ">",
         # a = sha256(a + ".")                                # is the final hash, separate so can be changed..
         verify.append(a)
   
@@ -73,7 +83,7 @@ def verify_wkey(signature, message, pub):
 
 priv, pub = random_wkey()
 
-print "\n==== Private key (keep secret) ====="
+print "\n=============== Private key (keep secret) ==============="
 print "Priv[0]: ",priv[0]
 print "Priv[1]: ",priv[1]
 print "Priv[2]: ",priv[2]
@@ -84,7 +94,7 @@ print "..."
 print "Priv[31]: ",priv[31]
 
 
-print "\n==== Public key (show everyone)====="
+print "\n=============== Public key (show everyone) ==============="
 print "Pub[0]: ",pub[0]
 print "Pub[1]: ",pub[1]
 print "Pub[2]: ",pub[2]
@@ -94,14 +104,13 @@ print "Pub[5]: ",pub[5]
 print "..."
 print "Pub[31]: ",pub[31]
 
-print "\n==== Message to sign ==============="
+print "\n=============== Message to sign ==============="
 print "Message:\t",message
 print "SHA-256:\t",sha256(message)
-print "\n==== Signature ====================="
-
 
 sign = sign_wkey(priv,message)
 
+print "\n=============== Signature ==============="
 print "Sign[0]:\t",sign[0]
 print "Sign[1]:\t",sign[1]
 print "Sign[2]:\t",sign[2]
@@ -109,4 +118,10 @@ print "Sign[3]:\t",sign[3]
 print "..."
 print "Sign[31]: ",sign[31]
 
-print "\nThe signature test is",verify_wkey(sign,message,pub)
+result = verify_wkey(sign,message,pub)
+
+
+print "\n=============== Verification result ==============="
+print "\nThe signature test is ....... ",
+raw_input("?????")  
+print "\n",result
