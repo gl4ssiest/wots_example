@@ -8,8 +8,10 @@ from os import urandom
 import sys
 message="Hola amigos del MUSTIC!"
 
-def random_key(n=32):                   #returns a 256 bit hex encoded (64 bytes) random number
-    return hexlify(urandom(n))
+def random_key(x, n=32): 
+    key = hexlify(urandom(n)) #returns a 256 bit hex encoded (64 bytes) random number
+    print "\nPrivate key value " , x , " : ", key
+    return key
 
 def sha256(message):
     return hashlib.sha256(message).hexdigest()
@@ -21,14 +23,20 @@ def random_wkey(w=8, verbose=0):      #create random W-OTS keypair
 
     priv = []
     pub = []
-    print "Hashing number random keys by:\t",2**w
+    print "=============== Generacion de par Privado, Publico ================"
+    raw_input("Press enter to continue....")    
+    
     for x in range(256/w):
-        a = random_key()
+        a = random_key(x)
         priv.append(a)
-        for y in range(2**w-1):              
+        print "\n\t",2**w,"Hashing (SHA-256) iterations ",
+        for y in range(2**w):              
             a = sha256(a)
-        pub.append(sha256(a))               
-
+            print ">",
+        pub.append(a)
+        print "\n\nPublic key value " , x , " : ", a 
+    
+    raw_input("Siguiente paso? ")              
     return priv, pub 
 
 def sign_wkey(priv, message):      
